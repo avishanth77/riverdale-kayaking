@@ -2,8 +2,8 @@
 
 > **Project:** Riverdale Kayaking Web Application & Custom Admin Portal
 > **Stack:** Node.js, Express 5, Multer, Vanilla JS, Tailwind CSS, JSON Persistent Storage
-> **Generated Date:** 11/25/2026, 4:06:18 PM GMT+5:30
-> **Total Dialogue Turns:** 30
+> **Generated Date:** 11/25/2026, 4:11:15 PM GMT+5:30
+> **Total Dialogue Turns:** 31
 
 ---
 
@@ -39,6 +39,7 @@
 - [**Turn 28:** New Username: riverdale](#turn-28)
 - [**Turn 29:** while geting to the http://localhost:3000/admin/login throught the short keys...](#turn-29)
 - [**Turn 30:** in mobile screen the our partners page"s  icon in the page horizontally](#turn-30)
+- [**Turn 31:** i want this like border btw the  hero page and Mangrove Backwaters page](#turn-31)
 
 ---
 
@@ -1331,6 +1332,27 @@ All changes have been committed and pushed to your GitHub repository: [`https://
 ### 👤 User Request
 
 > in mobile screen the our partners page"s  icon in the page horizontally
+
+### 🤖 Assistant Response & Actions Taken
+
+The **Our Partners** section has been updated for mobile screens:
+
+### Changes Made:
+- **Horizontal 3-Column Mobile Layout:** Instead of stacking vertically 1-by-1 in a single column, all three partner emblems (**RIVER SAFE**, **ECO PADDLE**, and **WILD CURRENT**) now sit **horizontally side-by-side in a single row** (`grid grid-cols-3`) across mobile screens.
+- **Fluid Proportions:** Fitted with responsive sizing (`w-12 h-8 sm:w-16 sm:h-10` icons and `text-[10px] sm:text-sm` typography) so the emblems fit comfortably across all phone screen widths without horizontal scroll or awkward line wraps.
+- **Desktop Parity:** On desktop screens, it transitions into an aligned flex layout with the heading and copy on the left and the three emblems on the right.
+
+The update has been committed and pushed to your GitHub repository: [`https://github.com/avishanth77/riverdale-kayaking.git`](https://github.com/avishanth77/riverdale-kayaking.git).
+
+---
+
+## Turn 31
+
+🕒 **Timestamp:** `2026-11-25T10:38:39Z`
+
+### 👤 User Request
+
+> i want this like border btw the  hero page and Mangrove Backwaters page
 
 ### 🤖 Assistant Response & Actions Taken
 

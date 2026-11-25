@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login | Riverdale Kayaking</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Oswald:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            river: {
+              950: '#0a2228',
+              900: '#0d262b',
+              850: '#0d323b',
+              800: '#112524',
+              700: '#165463',
+              400: '#6ab3bf',
+            },
+            gold: {
+              400: '#e6c289',
+              500: '#dfb472',
+              600: '#d4a359',
+            }
+          },
+          fontFamily: {
+            display: ['"Oswald"', 'sans-serif'],
+            serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-river-950 text-white min-h-screen flex items-center justify-center p-4 selection:bg-gold-500 selection:text-river-950">
+  <div class="w-full max-w-md">
+    <!-- Brand Logo -->
+    <div class="text-center mb-8">
+      <a href="/" class="inline-block transition-transform hover:scale-105" aria-label="Riverdale Kayaking Home">
+        <svg class="h-16 w-auto mx-auto" viewBox="0 0 260 118" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M167 51L125 27C121 24.5 119 19 113 15L86 3C81 1 76 3 74 8L71 14C69 19 71 24 76 27L103 40C109 43 115 41.5 120 44L162 55L167 51Z" fill="#FFFFFF"/>
+          <path d="M22 50.5C27 52 38 53 52 53H208C222 53 233 52 238 50.5C240 50 241.5 51.5 240.5 53.5C238.5 57 234 59 224 59H36C26 59 21.5 57 19.5 53.5C18.5 51.5 20 50 22 50.5Z" fill="#FFFFFF"/>
+          <text x="130" y="90" text-anchor="middle" fill="#FFFFFF" font-family="'Cormorant Garamond', Georgia, serif" font-size="31" font-weight="600" letter-spacing="5.5">RIVERDALE</text>
+          <line x1="44" y1="107" x2="77" y2="107" stroke="#6AB3BF" stroke-width="2.2" stroke-linecap="round"/>
+          <text x="130" y="111" text-anchor="middle" fill="#FFFFFF" font-family="'Plus Jakarta Sans', sans-serif" font-size="11.5" font-weight="500" letter-spacing="4.2">KAYAKING</text>
+          <line x1="183" y1="107" x2="216" y2="107" stroke="#6AB3BF" stroke-width="2.2" stroke-linecap="round"/>
+        </svg>
+      </a>
+      <div class="mt-4 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-river-850 border border-gold-500/30 text-gold-400 text-xs font-semibold uppercase tracking-widest">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
+        <span>Administration Portal</span>
+      </div>
+    </div>
+
+    <!-- Login Card -->
+    <div class="bg-river-900 border border-white/10 rounded-2xl shadow-2xl p-7 sm:p-8 backdrop-blur-xl">
+      <div class="mb-6">
+        <h1 class="font-display font-bold text-2xl text-white tracking-wide uppercase">Sign In</h1>
+        <p class="text-xs text-white/60 mt-1">Manage river bookings, photos, and live site content.</p>
+      </div>
+
+      <!-- Alert Box -->
+      <div id="login-alert" class="hidden mb-5 p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-medium"></div>
+
+      <form id="login-form" class="space-y-4">
+        <div>
+          <label for="username" class="block text-xs font-semibold uppercase tracking-wider text-white/80 mb-1.5">Username</label>
+          <div class="relative">
+            <input
+              type="text"
+              id="username"
+              required
+              autocomplete="username"
+              placeholder="e.g. admin"
+              value="admin"
+              class="w-full rounded-xl bg-river-950/80 border border-white/15 px-4 py-3 text-sm text-white placeholder-white/30 focus:border-gold-500 focus:ring-2 focus:ring-gold-500/20 focus:outline-none transition-all"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label for="password" class="block text-xs font-semibold uppercase tracking-wider text-white/80 mb-1.5">Password</label>
+          <div class="relative">
+            <input
+              type="password"
+              id="password"
+              required
+              autocomplete="current-password"
+              placeholder="Enter admin password"
+              value="riverdale123"
+              class="w-full rounded-xl bg-river-950/80 border border-white/15 px-4 py-3 text-sm text-white placeholder-white/30 focus:border-gold-500 focus:ring-2 focus:ring-gold-500/20 focus:outline-none transition-all"
+            />
+          </div>
+        </div>
+
+        <!-- Quick Demo Credentials Box -->
+        <div class="p-3 rounded-xl bg-river-850 border border-white/5 text-xs text-white/70 flex items-center justify-between">
+          <span>Default: <strong class="text-gold-400">admin</strong> / <strong class="text-gold-400">riverdale123</strong></span>
+          <button type="button" id="fill-creds" class="text-[11px] font-semibold text-gold-400 hover:text-white underline">Auto-fill</button>
+        </div>
+
+        <button
+          type="submit"
+          id="submit-btn"
+          class="w-full py-3.5 px-4 rounded-xl bg-gold-500 hover:bg-gold-600 text-river-950 font-display font-bold uppercase tracking-wider text-sm transition-all duration-200 hover:shadow-lg hover:shadow-gold-500/20 cursor-pointer flex items-center justify-center gap-2"
+        >
+          <span>Login to Admin Panel</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+        </button>
+      </form>
+    </div>
+
+    <!-- Back to Website -->
+    <div class="text-center mt-6">
+      <a href="/" class="text-xs text-white/50 hover:text-gold-400 transition-colors inline-flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
+        <span>Back to Riverdale Kayaking Website</span>
+      </a>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const form = document.getElementById('login-form');
+      const alertBox = document.getElementById('login-alert');
+      const submitBtn = document.getElementById('submit-btn');
+      const fillCredsBtn = document.getElementById('fill-creds');
+
+      // Auto-fill button
+      fillCredsBtn.addEventListener('click', () => {
+        document.getElementById('username').value = 'admin';
+        document.getElementById('password').value = 'riverdale123';
+      });
+
+      // Check if already logged in
+      fetch('/api/admin/me')
+        .then(r => r.json())
+        .then(data => {
+          if (data.authenticated) {
+            window.location.href = '/admin';
+          }
+        })
+        .catch(() => {});
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        alertBox.classList.add('hidden');
+
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value;
+
+        if (!username || !password) {
+          alertBox.textContent = 'Please enter both username and password.';
+          alertBox.classList.remove('hidden');
+          return;
+        }
+
+        submitBtn.disabled = true;
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = `
+          <svg class="animate-spin h-4 w-4 text-river-950" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+          </svg>
+          <span>Authenticating...</span>
+        `;
+
+        try {
+          const res = await fetch('/api/admin/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+          });
+
+          const data = await res.json();
+          if (!res.ok || !data.success) {
+            throw new Error(data.message || 'Invalid username or password');
+          }
+
+          // Redirect to admin panel
+          window.location.href = '/admin';
+        } catch (err) {
+          alertBox.textContent = err.message || 'Login failed. Please verify credentials.';
+          alertBox.classList.remove('hidden');
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalText;
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

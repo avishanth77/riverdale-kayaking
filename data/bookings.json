@@ -1,0 +1,50 @@
+[
+  {
+    "id": "bk-1001",
+    "refId": "RDK-2026-4821",
+    "name": "Aarav Sharma",
+    "contact": "+91 98471 22334",
+    "tourId": "sunrise-paddling",
+    "tourName": "Sunrise River Paddling",
+    "date": "2026-11-28",
+    "slot": "Sunrise 6:00 AM",
+    "kayakers": 2,
+    "unitPrice": 1200,
+    "totalPrice": 2400,
+    "status": "Confirmed",
+    "notes": "Requested lightweight paddles and waterproof phone pouch.",
+    "createdAt": "2026-11-25T08:15:00.000Z"
+  },
+  {
+    "id": "bk-1002",
+    "refId": "RDK-2026-7319",
+    "name": "Meera Krishnan",
+    "contact": "meera.k@gmail.com",
+    "tourId": "private-expeditions",
+    "tourName": "Private Expeditions",
+    "date": "2026-11-29",
+    "slot": "Sunset 4:30 PM",
+    "kayakers": 2,
+    "unitPrice": 1800,
+    "totalPrice": 3600,
+    "status": "Pending",
+    "notes": "Anniversary paddle. Requested sunset photo assistance from guide.",
+    "createdAt": "2026-11-25T10:40:00.000Z"
+  },
+  {
+    "id": "bk-1003",
+    "refId": "RDK-2026-9142",
+    "name": "Vikram Sen",
+    "contact": "+91 94462 88990",
+    "tourId": "group-events",
+    "tourName": "Group & Event Trips",
+    "date": "2026-12-02",
+    "slot": "Morning 9:00 AM",
+    "kayakers": 6,
+    "unitPrice": 1350,
+    "totalPrice": 8100,
+    "status": "Confirmed",
+    "notes": "Corporate weekend club. 3 tandem kayaks requested.",
+    "createdAt": "2026-11-25T11:20:00.000Z"
+  }
+]

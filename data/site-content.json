@@ -1,0 +1,140 @@
+{
+  "hero": {
+    "image": "https://images.pexels.com/photos/1927054/pexels-photo-1927054.jpeg?auto=compress&cs=tinysrgb&w=1800&fm=webp",
+    "badge": "Kadalundi Mangrove & Sunrise Backwaters",
+    "titlePart1": "Kayaking in Kadalundi",
+    "titleOutline": "Mangrove Forest",
+    "titlePart2": "Riverdale Kayaking",
+    "subtitle": "Glide through tranquil emerald mangrove channels, Balathiruthi backwaters, and sunlit river bends with certified local river guides."
+  },
+  "about": {
+    "tallImage": "https://images.pexels.com/photos/38834398/pexels-photo-38834398.jpeg?auto=compress&cs=tinysrgb&w=1000&fm=webp",
+    "wideImage": "https://images.pexels.com/photos/12879016/pexels-photo-12879016.jpeg?auto=compress&cs=tinysrgb&w=1400&fm=webp"
+  },
+  "tours": {
+    "bgImage": "https://images.pexels.com/photos/30481942/pexels-photo-30481942.jpeg?auto=compress&cs=tinysrgb&w=1800&fm=webp"
+  },
+  "why": {
+    "image": "https://images.pexels.com/photos/4468008/pexels-photo-4468008.jpeg?auto=compress&cs=tinysrgb&w=1400&fm=webp"
+  },
+  "instagram": [
+    {
+      "id": "insta-1",
+      "src": "https://images.pexels.com/photos/30481942/pexels-photo-30481942.jpeg?auto=compress&cs=tinysrgb&w=900&fm=webp",
+      "alt": "Sunrise kayaking through Kadalundi mangrove tunnels at 6:00 AM",
+      "likes": "496",
+      "comments": "31",
+      "location": "Balathiruthi Sunrise Dock, Kadalundi",
+      "caption": "6:00 AM on the Kadalundi River—mirror-still water, rising mist, and the soft rhythm of paddles welcoming the morning sun. 🌅🛶",
+      "tags": "#KadalundiKayaking #SunriseKayaking #Balathiruthi #Kozhikode"
+    },
+    {
+      "id": "insta-2",
+      "src": "https://images.pexels.com/photos/5273200/pexels-photo-5273200.jpeg?auto=compress&cs=tinysrgb&w=900&fm=webp",
+      "alt": "Paddler in life jacket kayaking on Kadalundi emerald backwaters",
+      "likes": "382",
+      "comments": "19",
+      "location": "Kadalundi Mangrove Creek",
+      "caption": "Life jackets clipped, paddles dipped, smiles wide! First-time paddlers mastering their stroke on today’s guided mangrove drift. 🦺🌿",
+      "tags": "#KadalundiMangroves #BeginnerFriendly #KozhikodeTourism #Riverdale"
+    },
+    {
+      "id": "insta-3",
+      "src": "https://images.pexels.com/photos/12190891/pexels-photo-12190891.jpeg?auto=compress&cs=tinysrgb&w=900&fm=webp",
+      "alt": "Kayak bow gliding through Kadalundi green mangrove canal",
+      "likes": "614",
+      "comments": "42",
+      "location": "Balathiruthi Bio-Reserve",
+      "caption": "Bow-view through our favorite shaded Kadalundi mangrove corridor. Cool breeze, overhanging trees, and pure calm. 🌿✨",
+      "tags": "#MangroveKayaking #KadalundiBirdSanctuary #EcoPaddle #RiverdaleKayaking"
+    },
+    {
+      "id": "insta-4",
+      "src": "https://images.pexels.com/photos/39231897/pexels-photo-39231897.jpeg?auto=compress&cs=tinysrgb&w=900&fm=webp",
+      "alt": "Kayakers paddling on calm Kadalundi river at golden sunset",
+      "likes": "548",
+      "comments": "35",
+      "location": "Kadalundi Estuary Bend",
+      "caption": "Golden hour reflections across Kadalundi estuary. Join our 4:30 PM Sunset Paddle for views like this. 🌇🛶",
+      "tags": "#SunsetPaddle #KadalundiRiver #KozhikodeDiaries #Riverdale"
+    },
+    {
+      "id": "insta-5",
+      "src": "https://images.pexels.com/photos/12646745/pexels-photo-12646745.jpeg?auto=compress&cs=tinysrgb&w=900&fm=webp",
+      "alt": "Yellow kayak floating on crystal clear calm mangrove waters in Balathiruthi",
+      "likes": "437",
+      "comments": "24",
+      "location": "Balathiruthi Island",
+      "caption": "Crystal-clear mangrove stretches where you can watch peaceful bio-life right beneath your hull. 💧🛶",
+      "tags": "#Kadalundi #KayakAdventure #RiverdaleKayaking #KeralaTourism"
+    },
+    {
+      "id": "insta-6",
+      "src": "https://images.pexels.com/photos/6680137/pexels-photo-6680137.jpeg?auto=compress&cs=tinysrgb&w=900&fm=webp",
+      "alt": "Paddlers kayaking past lush Kadalundi riverbanks",
+      "likes": "519",
+      "comments": "28",
+      "location": "Kadalundi Bird Sanctuary Trail",
+      "caption": "Weekend crew exploring the scenic mangrove channels of Kadalundi. Small groups, big memories! 🙌🌿",
+      "tags": "#GroupKayaking #KadalundiEcoTrail #CalicutTravel #RiverdaleKayaking"
+    }
+  ],
+  "reelSlides": [
+    {
+      "id": "slide-1",
+      "src": "https://images.pexels.com/photos/34497794/pexels-photo-34497794.jpeg?auto=compress&cs=tinysrgb&w=1400&fm=webp",
+      "title": "Kadalundi Sunrise Mangrove Launch",
+      "desc": "Glide across glass-calm mangrove corridors at 6:00 AM with zero motor traffic."
+    },
+    {
+      "id": "slide-2",
+      "src": "https://images.pexels.com/photos/12879016/pexels-photo-12879016.jpeg?auto=compress&cs=tinysrgb&w=1400&fm=webp",
+      "title": "Balathiruthi Canopy Channels",
+      "desc": "Paddle past lush mangrove canopies and sweeping bends with certified local river guides."
+    },
+    {
+      "id": "slide-3",
+      "src": "https://images.pexels.com/photos/39231897/pexels-photo-39231897.jpeg?auto=compress&cs=tinysrgb&w=1400&fm=webp",
+      "title": "Kadalundi Estuary Sunset Drift",
+      "desc": "Watch warm amber reflections ripple across the backwaters as twilight settles."
+    }
+  ],
+  "packages": [
+    {
+      "id": "sunrise-paddling",
+      "name": "Sunrise Mangrove Kayaking",
+      "price": 1200,
+      "description": "Launch at 6:00 AM into silver morning mist and glass-calm mangrove channels around Balathiruthi Island before the day begins.",
+      "slot": "Sunrise 6:00 AM",
+      "duration": "2.5 Hours",
+      "badge": "Most Popular"
+    },
+    {
+      "id": "guided-tours",
+      "name": "Kadalundi Mangrove Eco Tour",
+      "price": 1500,
+      "description": "Explore shaded mangrove tunnels and migratory bird observation channels led by certified Kadalundi local naturalists.",
+      "slot": "Morning 9:00 AM",
+      "duration": "3 Hours",
+      "badge": "Best Seller"
+    },
+    {
+      "id": "group-events",
+      "name": "Balathiruthi Group Expedition",
+      "price": 1350,
+      "description": "Curated backwater outing for friends, college groups, and corporate retreats with tandem kayaks, safety gear, and refreshments.",
+      "slot": "Morning 9:00 AM",
+      "duration": "3.5 Hours",
+      "badge": "Group Special"
+    },
+    {
+      "id": "private-expeditions",
+      "name": "Private Sunset Kayaking",
+      "price": 1800,
+      "description": "Custom-paced golden hour or photography tour tailored exclusively for couples, families, and wildlife photographers.",
+      "slot": "Sunset 4:30 PM",
+      "duration": "4 Hours",
+      "badge": "Exclusive"
+    }
+  ]
+}

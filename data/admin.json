@@ -1,0 +1,32 @@
+{
+  "username": "admin",
+  "passwordHash": "203a8b68c86e9d88eaf3fb668c80242e986eeb73d0a07085b5080de79829f6d4",
+  "salt": "riverdale_salt_2026",
+  "sessionTokens": [
+    {
+      "token": "3ff04edbb7a6e4f8553d07a8b63890d2c6aca1bdddc7194fa95d201163c80dd8",
+      "expiresAt": "2026-12-02T08:30:52.233Z",
+      "createdAt": "2026-11-25T08:30:52.233Z"
+    },
+    {
+      "token": "fcec8b711055870fcf7480d6c756eba23e7e59751047915e97eba82416d2525e",
+      "expiresAt": "2026-12-02T08:34:40.902Z",
+      "createdAt": "2026-11-25T08:34:40.902Z"
+    },
+    {
+      "token": "1349096a429f1e2213dd7dbdc4ef4224e2bf8aa2538c9ec08776fffc4f704460",
+      "expiresAt": "2026-12-02T08:39:43.900Z",
+      "createdAt": "2026-11-25T08:39:43.900Z"
+    },
+    {
+      "token": "bdb23356e71bbf87630513b6dbabd5f1a692fa7406bbba1f13593120ece49fa3",
+      "expiresAt": "2026-12-02T08:42:33.000Z",
+      "createdAt": "2026-11-25T08:42:33.000Z"
+    },
+    {
+      "token": "e7569ad61562f5b7f2bee5a55a80927ebf802c6a715b0f316cfaf83f29eb5ff4",
+      "expiresAt": "2026-12-02T08:42:50.430Z",
+      "createdAt": "2026-11-25T08:42:50.430Z"
+    }
+  ]
+}

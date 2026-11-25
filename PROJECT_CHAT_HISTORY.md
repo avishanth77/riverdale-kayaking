@@ -2,8 +2,8 @@
 
 > **Project:** Riverdale Kayaking Web Application & Custom Admin Portal
 > **Stack:** Node.js, Express 5, Multer, Vanilla JS, Tailwind CSS, JSON Persistent Storage
-> **Generated Date:** 11/25/2026, 4:04:09 PM GMT+5:30
-> **Total Dialogue Turns:** 29
+> **Generated Date:** 11/25/2026, 4:06:18 PM GMT+5:30
+> **Total Dialogue Turns:** 30
 
 ---
 
@@ -38,6 +38,7 @@
 - [**Turn 27:** how i can do this manually](#turn-27)
 - [**Turn 28:** New Username: riverdale](#turn-28)
 - [**Turn 29:** while geting to the http://localhost:3000/admin/login throught the short keys...](#turn-29)
+- [**Turn 30:** in mobile screen the our partners page"s  icon in the page horizontally](#turn-30)
 
 ---
 
@@ -1294,6 +1295,42 @@ You can now log in at `/admin` (or via the desktop shortcut `Ctrl + Shift + 9`) 
 
 > while geting to the http://localhost:3000/admin/login throught the short keys and the gesstures the admin pages bilnk and see fix this and also remove Administration Portal on http://localhost:3000/admin/login page and remove Admin Portal
 > Node.js Express Backend in ,http://localhost:3000/admin/ page
+
+### 🤖 Assistant Response & Actions Taken
+
+All three items have been resolved and pushed to GitHub:
+
+---
+
+### 1. Fixed the Flash / Blink When Using Secret Shortcuts & Gestures
+- **Why it was blinking:** Previously, Express served `public/admin/index.html` statically before checking your session cookie. The browser would render the dashboard for ~200ms before client-side JavaScript redirected you to `/admin/login`.
+- **The Fix:**
+  1. **Server-Side 302 Redirect:** `/admin` now intercepts the request *before* any static files are served. If unauthenticated, the server immediately returns an HTTP `302 Found` redirecting straight to `/admin/login`. **Zero bytes of the admin dashboard are sent to the browser.**
+  2. **Anti-Blink CSS:** Added `body:not(.authed) { display: none !important; }` to the dashboard so that even from local browser cache, not a single pixel renders until authentication is verified.
+
+---
+
+### 2. Removed "Administration Portal" Badge on `/admin/login`
+- Cleaned up [`public/admin/login.html`](file:///d:/vibe%20code/river%20dale/public/admin/login.html). The badge underneath the brand logo has been completely removed for a minimal, discreet aesthetic.
+
+---
+
+### 3. Removed "Admin Portal" & "Node.js Express Backend" on `/admin/`
+- Cleaned up [`public/admin/index.html`](file:///d:/vibe%20code/river%20dale/public/admin/index.html). The top navigation bar now displays only the Riverdale Kayaking brand logo without any developer/backend badges.
+
+---
+
+All changes have been committed and pushed to your GitHub repository: [`https://github.com/avishanth77/riverdale-kayaking.git`](https://github.com/avishanth77/riverdale-kayaking.git).
+
+---
+
+## Turn 30
+
+🕒 **Timestamp:** `2026-11-25T10:31:45Z`
+
+### 👤 User Request
+
+> in mobile screen the our partners page"s  icon in the page horizontally
 
 ### 🤖 Assistant Response & Actions Taken
 

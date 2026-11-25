@@ -700,32 +700,37 @@ app.get('/api/bookings/export/csv', requireAuth, async (req, res) => {
 });
 
 // -------------------------------------------------------------
-// Protected Admin Dashboard Route (Server-side redirect: ZERO flash/blink)
+// Protected Secret God Route (Server-side redirect: ZERO flash/blink)
 // -------------------------------------------------------------
-app.get(['/admin', '/admin/', '/admin/index.html'], async (req, res) => {
+app.get(['/god', '/god/', '/god/index.html'], async (req, res) => {
   const token = req.cookies.admin_token;
   if (!token) {
-    return res.redirect(302, '/admin/login');
+    return res.redirect(302, '/god/login');
   }
   try {
     const isValid = await db.validateAdminSession(token);
     if (!isValid) {
-      return res.redirect(302, '/admin/login');
+      return res.redirect(302, '/god/login');
     }
-    res.sendFile(path.join(PUBLIC_DIR, 'admin', 'index.html'));
+    res.sendFile(path.join(PUBLIC_DIR, 'god', 'index.html'));
   } catch (err) {
-    res.redirect(302, '/admin/login');
+    res.redirect(302, '/god/login');
   }
 });
 
-app.get(['/admin/login', '/admin/login/'], (req, res) => {
-  res.sendFile(path.join(PUBLIC_DIR, 'admin', 'login.html'));
+app.get(['/god/login', '/god/login/'], (req, res) => {
+  res.sendFile(path.join(PUBLIC_DIR, 'god', 'login.html'));
+});
+
+// Decoy 404 handler for traditional /admin routes to deceive bots & scanners
+app.use('/admin', (req, res) => {
+  res.status(404).sendFile(path.join(PUBLIC_DIR, 'index.html'));
 });
 
 // -------------------------------------------------------------
 // Static UI Routes
 // -------------------------------------------------------------
-// Serve public website files (excluding protected admin dashboard above)
+// Serve public website files (excluding protected god dashboard above)
 app.use(express.static(PUBLIC_DIR));
 
 // Fallback for public website
@@ -743,7 +748,7 @@ async function startServer() {
     console.log(`====================================================`);
     console.log(`🛶 Riverdale Kayaking Node.js Server Running!`);
     console.log(`🌐 Public Website:  http://localhost:${PORT}`);
-    console.log(`⚙️  Admin Panel:     http://localhost:${PORT}/admin`);
+    console.log(`⚙️  Admin Panel:     http://localhost:${PORT}/god`);
     console.log(`🔑 Admin Access:    Secret shortcut Ctrl+Shift+9 or mobile gesture`);
     console.log(`💾 Database:        ${db.isMongoConnected() ? 'MongoDB Cloud Atlas' : 'Local JSON Store (data/)'}`);
     console.log(`====================================================`);

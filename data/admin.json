@@ -22,11 +22,12 @@
       "token": "e7569ad61562f5b7f2bee5a55a80927ebf802c6a715b0f316cfaf83f29eb5ff4",
       "expiresAt": "2026-12-02T08:42:50.430Z",
       "createdAt": "2026-11-25T08:42:50.430Z"
-    },
+    }
+  ],
+  "activeSessions": [
     {
-      "token": "c8c3982cb5aa4f8a3e9abdf39ee13071655f1995486afd4472045766e6d44444",
-      "expiresAt": "2026-12-02T09:40:01.769Z",
-      "createdAt": "2026-11-25T09:40:01.769Z"
+      "token": "56ab1b335e9040be6287cc63411e340c902f5c413b14cda959516b05b05413f3",
+      "expiresAt": "2026-12-02T10:36:10.504Z"
     }
   ]
 }

@@ -125,7 +125,7 @@
         .then(r => r.json())
         .then(data => {
           if (data.authenticated) {
-            window.location.href = '/admin';
+            window.location.href = '/god';
           }
         })
         .catch(() => {});
@@ -165,8 +165,8 @@
             throw new Error(data.message || 'Invalid username or password');
           }
 
-          // Redirect to admin panel
-          window.location.href = '/admin';
+          // Redirect to god panel
+          window.location.href = '/god';
         } catch (err) {
           alertBox.textContent = err.message || 'Login failed. Please verify credentials.';
           alertBox.classList.remove('hidden');

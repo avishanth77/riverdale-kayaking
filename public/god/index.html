@@ -1017,7 +1017,7 @@
           const res = await fetch('/api/admin/me');
           const data = await res.json();
           if (!data.authenticated) {
-            window.location.replace('/admin/login');
+            window.location.replace('/god/login');
             return false;
           }
           document.body.classList.add('authed');
@@ -1026,7 +1026,7 @@
           if (curDisplay) curDisplay.textContent = data.username || 'admin';
           return true;
         } catch {
-          window.location.replace('/admin/login');
+          window.location.replace('/god/login');
           return false;
         }
       }
@@ -1036,7 +1036,7 @@
         try {
           await fetch('/api/admin/logout', { method: 'POST' });
         } finally {
-          window.location.href = '/admin/login';
+          window.location.href = '/god/login';
         }
       });
 

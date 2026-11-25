@@ -23,7 +23,7 @@ Welcome to the **Context Memory** archive for the **Riverdale Kayaking Kadalundi
 - **Repository:** `https://github.com/avishanth77/riverdale-kayaking.git`
 - **Primary Branch:** `main`
 - **Local Port:** `3000` (`http://localhost:3000`)
-- **Admin Access:** Secret shortcut `Ctrl + Shift + 9` (desktop) or tap header logo 4 times (mobile)
-- **Default Admin User:** `admin` / `riverdale2026`
+- **Admin Access:** Secret route `/god` via shortcut `Ctrl + Shift + 9` (desktop) or tap header logo 4 times (mobile)
+- **Active Admin User:** `riverdale` / `riv456`
 - **Location:** Balathiruthi, Kadalundi, Kozhikode, Kerala 673634 (11.1306° N, 75.8300° E)
 - **Operating Hours:** 6:00 AM – 6:00 PM (Sunrise & Sunset sessions)

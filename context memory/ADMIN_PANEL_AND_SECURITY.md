@@ -9,7 +9,7 @@ To prevent unauthorized tampering, spam submissions, or crawler reconnaissance, 
 
 ### A. Desktop Key Combination
 - **Shortcut:** `Ctrl + Shift + 9` (Windows/Linux) or `Cmd + Shift + 9` (Mac).
-- **Mechanism:** Global `keydown` event listener in `public/js/` opens `/admin` in the current tab.
+- **Mechanism:** Global `keydown` event listener in `public/index.html` opens `/god` in the current tab.
 
 ### B. Secret Mobile Gestures
 Because mobile devices lack keyboard shortcuts, three stealth touch gestures are built into the public website:
@@ -17,7 +17,7 @@ Because mobile devices lack keyboard shortcuts, three stealth touch gestures are
 1. **4-Tap Logo Gesture:**
    - Tap the brand logo in the top navbar **4 times** within 2.5 seconds.
 2. **Long-Press Logo Gesture:**
-   - Touch and hold the brand logo in the navbar continuously for **2.5 seconds**. A subtle haptic vibration triggers navigation to `/admin`.
+   - Touch and hold the brand logo in the navbar continuously for **2.5 seconds**. A subtle haptic vibration triggers navigation to `/god`.
 3. **3-Tap Footer Copyright:**
    - Tap the copyright text in the footer **3 times** within 2.0 seconds.
 

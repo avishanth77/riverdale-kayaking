@@ -691,11 +691,11 @@
     <!-- =================================================================== -->
     <!-- 5. OUR PARTNERS & CERTIFICATIONS STRIP (#f4f7f8 BACKGROUND)         -->
     <!-- =================================================================== -->
-    <section aria-label="Our River Safety and Eco-Tourism Partners" class="bg-slatex-100 py-14 sm:py-16 border-b border-slate-200/70">
+    <section aria-label="Our River Safety and Eco-Tourism Partners" class="bg-slatex-100 py-10 sm:py-16 border-b border-slate-200/70">
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 items-center reveal">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 sm:gap-8 reveal">
           <!-- Column 1: Heading & Copy -->
-          <div>
+          <div class="max-w-md">
             <h2 class="font-display font-bold text-2xl text-slatex-900 mb-2">Our Partners</h2>
             <p class="text-xs text-slatex-600 leading-relaxed mb-3">
               Certified by leading river safety councils and sustainable eco-paddling initiatives.
@@ -710,41 +710,44 @@
             </button>
           </div>
 
-          <!-- Column 2: RIVER SAFE Monochrome Emblem -->
-          <div class="flex justify-start sm:justify-center">
-            <div class="flex flex-col items-center text-slatex-600/80 hover:text-slatex-900 transition-colors">
-              <svg class="w-16 h-10 mb-1.5" viewBox="0 0 80 44" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M10 26c12 5 48 5 60 0-7 8-53 8-60 0z"/>
-                <path stroke-linecap="round" stroke-linejoin="round" d="M24 26l16-18 16 18"/>
-                <path stroke-linecap="round" d="M14 38c8-3 16 3 26 0s18 3 26 0"/>
-              </svg>
-              <span class="font-display font-bold text-sm tracking-[0.18em] uppercase">RIVER SAFE</span>
-              <span class="text-[9px] tracking-[0.22em] uppercase opacity-75">Certified Guides</span>
+          <!-- Partner Icons (Horizontally laid out in a single row on mobile and desktop) -->
+          <div class="grid grid-cols-3 gap-2 sm:gap-6 items-center flex-1 max-w-2xl pt-2 sm:pt-0">
+            <!-- Partner 1: RIVER SAFE Monochrome Emblem -->
+            <div class="flex justify-center text-center">
+              <div class="flex flex-col items-center text-slatex-600/80 hover:text-slatex-900 transition-colors">
+                <svg class="w-12 h-8 sm:w-16 sm:h-10 mb-1.5" viewBox="0 0 80 44" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M10 26c12 5 48 5 60 0-7 8-53 8-60 0z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M24 26l16-18 16 18"/>
+                  <path stroke-linecap="round" d="M14 38c8-3 16 3 26 0s18 3 26 0"/>
+                </svg>
+                <span class="font-display font-bold text-[10px] sm:text-sm tracking-[0.12em] sm:tracking-[0.18em] uppercase">RIVER SAFE</span>
+                <span class="text-[7px] sm:text-[9px] tracking-[0.14em] sm:tracking-[0.22em] uppercase opacity-75">Certified Guides</span>
+              </div>
             </div>
-          </div>
 
-          <!-- Column 3: ECO PADDLE Monochrome Emblem -->
-          <div class="flex justify-start sm:justify-center">
-            <div class="flex flex-col items-center text-slatex-600/80 hover:text-slatex-900 transition-colors">
-              <svg class="w-16 h-10 mb-1.5" viewBox="0 0 80 44" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M40 6C28 14 25 26 40 34C55 26 52 14 40 6z"/>
-                <path stroke-linecap="round" d="M40 6v32M22 36c6-2 12 2 18 0s12 2 18 0"/>
-              </svg>
-              <span class="font-display font-bold text-sm tracking-[0.18em] uppercase">ECO PADDLE</span>
-              <span class="text-[9px] tracking-[0.22em] uppercase opacity-75">Zero-Waste Trails</span>
+            <!-- Partner 2: ECO PADDLE Monochrome Emblem -->
+            <div class="flex justify-center text-center">
+              <div class="flex flex-col items-center text-slatex-600/80 hover:text-slatex-900 transition-colors">
+                <svg class="w-12 h-8 sm:w-16 sm:h-10 mb-1.5" viewBox="0 0 80 44" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M40 6C28 14 25 26 40 34C55 26 52 14 40 6z"/>
+                  <path stroke-linecap="round" d="M40 6v32M22 36c6-2 12 2 18 0s12 2 18 0"/>
+                </svg>
+                <span class="font-display font-bold text-[10px] sm:text-sm tracking-[0.12em] sm:tracking-[0.18em] uppercase">ECO PADDLE</span>
+                <span class="text-[7px] sm:text-[9px] tracking-[0.14em] sm:tracking-[0.22em] uppercase opacity-75">Zero-Waste Trails</span>
+              </div>
             </div>
-          </div>
 
-          <!-- Column 4: WILD CURRENT Monochrome Emblem -->
-          <div class="flex justify-start sm:justify-center">
-            <div class="flex flex-col items-center text-slatex-600/80 hover:text-slatex-900 transition-colors">
-              <svg class="w-16 h-10 mb-1.5" viewBox="0 0 80 44" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M16 30c8-14 16-14 24 0s16-14 24 0"/>
-                <path stroke-linecap="round" stroke-linejoin="round" d="M22 20l18-12 18 12"/>
-                <path stroke-linecap="round" d="M18 37h44"/>
-              </svg>
-              <span class="font-display font-bold text-sm tracking-[0.18em] uppercase">WILD CURRENT</span>
-              <span class="text-[9px] tracking-[0.22em] uppercase opacity-75">River Conservation</span>
+            <!-- Partner 3: WILD CURRENT Monochrome Emblem -->
+            <div class="flex justify-center text-center">
+              <div class="flex flex-col items-center text-slatex-600/80 hover:text-slatex-900 transition-colors">
+                <svg class="w-12 h-8 sm:w-16 sm:h-10 mb-1.5" viewBox="0 0 80 44" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M16 30c8-14 16-14 24 0s16-14 24 0"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M22 20l18-12 18 12"/>
+                  <path stroke-linecap="round" d="M18 37h44"/>
+                </svg>
+                <span class="font-display font-bold text-[10px] sm:text-sm tracking-[0.12em] sm:tracking-[0.18em] uppercase">WILD CURRENT</span>
+                <span class="text-[7px] sm:text-[9px] tracking-[0.14em] sm:tracking-[0.22em] uppercase opacity-75">Conservation</span>
+              </div>
             </div>
           </div>
         </div>

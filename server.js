@@ -159,6 +159,46 @@ app.get('/api/admin/me', async (req, res) => {
   }
 });
 
+app.post('/api/admin/change-credentials', requireAuth, async (req, res) => {
+  const { currentPassword, newUsername, newPassword } = req.body;
+  if (!currentPassword) {
+    return res.status(400).json({ success: false, message: 'Current password is required to verify identity' });
+  }
+
+  try {
+    const adminData = await db.getAdminData();
+    const salt = adminData.salt || DEFAULT_SALT;
+    if (hashPassword(currentPassword, salt) !== adminData.passwordHash) {
+      return res.status(400).json({ success: false, message: 'Current password is incorrect' });
+    }
+
+    let finalUsername = adminData.username || 'admin';
+    if (newUsername && newUsername.trim()) {
+      finalUsername = newUsername.trim();
+    }
+
+    let newHash = adminData.passwordHash;
+    let newSalt = salt;
+    if (newPassword && newPassword.trim()) {
+      if (newPassword.trim().length < 6) {
+        return res.status(400).json({ success: false, message: 'New password must be at least 6 characters' });
+      }
+      newSalt = crypto.randomBytes(16).toString('hex');
+      newHash = hashPassword(newPassword.trim(), newSalt);
+    }
+
+    await db.saveAdminCredentials(finalUsername, newHash, newSalt);
+    res.json({
+      success: true,
+      message: 'Admin credentials updated successfully in MongoDB and local storage!',
+      username: finalUsername
+    });
+  } catch (err) {
+    console.error('Update credentials error:', err);
+    res.status(500).json({ success: false, message: 'Failed to update credentials' });
+  }
+});
+
 app.post('/api/admin/change-password', requireAuth, async (req, res) => {
   const { currentPassword, newPassword } = req.body;
   if (!currentPassword || !newPassword || newPassword.length < 6) {
@@ -172,8 +212,9 @@ app.post('/api/admin/change-password', requireAuth, async (req, res) => {
       return res.status(400).json({ success: false, message: 'Current password is incorrect' });
     }
 
-    const newHash = hashPassword(newPassword, salt);
-    await db.saveAdminPassword(newHash, salt);
+    const newSalt = crypto.randomBytes(16).toString('hex');
+    const newHash = hashPassword(newPassword, newSalt);
+    await db.saveAdminCredentials(null, newHash, newSalt);
     res.json({ success: true, message: 'Password updated successfully' });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Failed to update password' });

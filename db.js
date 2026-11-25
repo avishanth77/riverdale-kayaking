@@ -225,31 +225,44 @@ async function saveContent(newData) {
 // --- ADMIN & SESSIONS ---
 async function getAdminData() {
   if (isConnected) {
-    const doc = await AdminModel.findOne({ username: 'admin' }).lean();
+    const doc = await AdminModel.findOne().lean();
     if (doc) return doc;
   }
   return await readJsonFile(ADMIN_FILE, {});
 }
 
-async function saveAdminPassword(passwordHash, salt) {
+async function saveAdminCredentials(newUsername, passwordHash, salt) {
   if (isConnected) {
+    const updateObj = {};
+    if (newUsername) updateObj.username = newUsername;
+    if (passwordHash && salt) {
+      updateObj.passwordHash = passwordHash;
+      updateObj.salt = salt;
+    }
     await AdminModel.findOneAndUpdate(
-      { username: 'admin' },
-      { $set: { passwordHash, salt } },
-      { upsert: true }
+      {},
+      { $set: updateObj },
+      { upsert: true, new: true }
     );
   }
   const admin = await readJsonFile(ADMIN_FILE, {});
-  admin.passwordHash = passwordHash;
-  admin.salt = salt;
+  if (newUsername) admin.username = newUsername;
+  if (passwordHash && salt) {
+    admin.passwordHash = passwordHash;
+    admin.salt = salt;
+  }
   await writeJsonFile(ADMIN_FILE, admin);
   return true;
+}
+
+async function saveAdminPassword(passwordHash, salt) {
+  return await saveAdminCredentials(null, passwordHash, salt);
 }
 
 async function addAdminSession(token, expiresAt) {
   if (isConnected) {
     await AdminModel.findOneAndUpdate(
-      { username: 'admin' },
+      {},
       { $push: { sessions: { token, expiresAt: new Date(expiresAt) } } }
     );
   }
@@ -264,7 +277,6 @@ async function validateAdminSession(token) {
 
   if (isConnected) {
     const doc = await AdminModel.findOne({
-      username: 'admin',
       'sessions.token': token,
       'sessions.expiresAt': { $gt: new Date() }
     });
@@ -280,7 +292,7 @@ async function validateAdminSession(token) {
 async function removeAdminSession(token) {
   if (isConnected) {
     await AdminModel.findOneAndUpdate(
-      { username: 'admin' },
+      {},
       { $pull: { sessions: { token } } }
     );
   }
@@ -302,6 +314,7 @@ module.exports = {
   saveContent,
   getAdminData,
   saveAdminPassword,
+  saveAdminCredentials,
   addAdminSession,
   validateAdminSession,
   removeAdminSession

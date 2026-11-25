@@ -1,28 +1,22 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
-const fsPromises = require('fs').promises;
 const crypto = require('crypto');
 const multer = require('multer');
 const cookieParser = require('cookie-parser');
+const db = require('./db');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Directories
-const DATA_DIR = path.join(__dirname, 'data');
 const UPLOADS_DIR = path.join(__dirname, 'uploads');
 const PUBLIC_DIR = path.join(__dirname, 'public');
 
 // Ensure directories exist
-if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 if (!fs.existsSync(PUBLIC_DIR)) fs.mkdirSync(PUBLIC_DIR, { recursive: true });
-
-// JSON File paths
-const CONTENT_FILE = path.join(DATA_DIR, 'site-content.json');
-const BOOKINGS_FILE = path.join(DATA_DIR, 'bookings.json');
-const ADMIN_FILE = path.join(DATA_DIR, 'admin.json');
 
 // Middleware
 app.use(express.json({ limit: '10mb' }));
@@ -33,45 +27,12 @@ app.use(cookieParser());
 app.use('/uploads', express.static(UPLOADS_DIR));
 
 // -------------------------------------------------------------
-// Helper: File-based JSON Database Operations
-// -------------------------------------------------------------
-async function readJson(filePath, defaultValue) {
-  try {
-    const raw = await fsPromises.readFile(filePath, 'utf8');
-    return JSON.parse(raw);
-  } catch (err) {
-    if (defaultValue !== undefined) {
-      await writeJson(filePath, defaultValue);
-      return defaultValue;
-    }
-    throw err;
-  }
-}
-
-async function writeJson(filePath, data) {
-  const tempPath = `${filePath}.tmp.${Date.now()}`;
-  await fsPromises.writeFile(tempPath, JSON.stringify(data, null, 2), 'utf8');
-  await fsPromises.rename(tempPath, filePath);
-}
-
-// -------------------------------------------------------------
 // Helper: Password Hashing & Auth
 // -------------------------------------------------------------
 const DEFAULT_SALT = 'riverdale_salt_2026';
 
 function hashPassword(password, salt = DEFAULT_SALT) {
   return crypto.createHash('sha256').update(`${password}:${salt}`).digest('hex');
-}
-
-// Initialize Admin if needed
-async function getAdminData() {
-  const defaultAdmin = {
-    username: 'admin',
-    passwordHash: hashPassword('riverdale123', DEFAULT_SALT),
-    salt: DEFAULT_SALT,
-    sessionTokens: []
-  };
-  return await readJson(ADMIN_FILE, defaultAdmin);
 }
 
 // Auth Middleware
@@ -82,12 +43,12 @@ async function requireAuth(req, res, next) {
   }
 
   try {
-    const adminData = await getAdminData();
-    const session = adminData.sessionTokens?.find(s => s.token === token);
-    if (!session || new Date(session.expiresAt) < new Date()) {
+    const isValid = await db.validateAdminSession(token);
+    if (!isValid) {
       return res.status(401).json({ success: false, message: 'Session expired or invalid' });
     }
-    req.admin = { username: adminData.username };
+    const adminData = await db.getAdminData();
+    req.admin = { username: adminData.username || 'admin' };
     next();
   } catch (err) {
     console.error('Auth error:', err);
@@ -134,11 +95,11 @@ app.post('/api/admin/login', async (req, res) => {
   }
 
   try {
-    const adminData = await getAdminData();
+    const adminData = await db.getAdminData();
     const salt = adminData.salt || DEFAULT_SALT;
     const computedHash = hashPassword(password, salt);
 
-    if (username !== adminData.username || computedHash !== adminData.passwordHash) {
+    if (username !== (adminData.username || 'admin') || computedHash !== adminData.passwordHash) {
       return res.status(401).json({ success: false, message: 'Invalid username or password' });
     }
 
@@ -146,23 +107,18 @@ app.post('/api/admin/login', async (req, res) => {
     const token = crypto.randomBytes(32).toString('hex');
     const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(); // 7 days
 
-    // Keep up to 10 active sessions
-    const activeSessions = (adminData.sessionTokens || []).filter(s => new Date(s.expiresAt) > new Date());
-    activeSessions.push({ token, expiresAt, createdAt: new Date().toISOString() });
-    adminData.sessionTokens = activeSessions.slice(-10);
-
-    await writeJson(ADMIN_FILE, adminData);
+    await db.addAdminSession(token, expiresAt);
 
     // Set cookie
     res.cookie('admin_token', token, {
       httpOnly: true,
-      secure: false, // Set to true if HTTPS
+      secure: false, // Set to true on HTTPS
       maxAge: 7 * 24 * 60 * 60 * 1000,
       sameSite: 'lax',
       path: '/'
     });
 
-    res.json({ success: true, message: 'Login successful', username: adminData.username });
+    res.json({ success: true, message: 'Login successful', username: adminData.username || 'admin' });
   } catch (err) {
     console.error('Login error:', err);
     res.status(500).json({ success: false, message: 'Login error' });
@@ -173,9 +129,7 @@ app.post('/api/admin/logout', async (req, res) => {
   const token = req.cookies.admin_token;
   if (token) {
     try {
-      const adminData = await getAdminData();
-      adminData.sessionTokens = (adminData.sessionTokens || []).filter(s => s.token !== token);
-      await writeJson(ADMIN_FILE, adminData);
+      await db.removeAdminSession(token);
     } catch (err) {
       console.error('Logout error:', err);
     }
@@ -190,12 +144,16 @@ app.get('/api/admin/me', async (req, res) => {
     return res.json({ authenticated: false });
   }
   try {
-    const adminData = await getAdminData();
-    const session = adminData.sessionTokens?.find(s => s.token === token);
-    if (!session || new Date(session.expiresAt) < new Date()) {
+    const isValid = await db.validateAdminSession(token);
+    if (!isValid) {
       return res.json({ authenticated: false });
     }
-    res.json({ authenticated: true, username: adminData.username });
+    const adminData = await db.getAdminData();
+    res.json({
+      authenticated: true,
+      username: adminData.username || 'admin',
+      database: db.isMongoConnected() ? 'MongoDB Cloud Database' : 'Local JSON Database'
+    });
   } catch (err) {
     res.json({ authenticated: false });
   }
@@ -208,14 +166,14 @@ app.post('/api/admin/change-password', requireAuth, async (req, res) => {
   }
 
   try {
-    const adminData = await getAdminData();
+    const adminData = await db.getAdminData();
     const salt = adminData.salt || DEFAULT_SALT;
     if (hashPassword(currentPassword, salt) !== adminData.passwordHash) {
       return res.status(400).json({ success: false, message: 'Current password is incorrect' });
     }
 
-    adminData.passwordHash = hashPassword(newPassword, salt);
-    await writeJson(ADMIN_FILE, adminData);
+    const newHash = hashPassword(newPassword, salt);
+    await db.saveAdminPassword(newHash, salt);
     res.json({ success: true, message: 'Password updated successfully' });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Failed to update password' });
@@ -244,27 +202,39 @@ app.post('/api/upload', requireAuth, upload.single('photo'), (req, res) => {
 // -------------------------------------------------------------
 app.get('/api/content', async (req, res) => {
   try {
-    const content = await readJson(CONTENT_FILE, {});
+    const content = await db.getContent();
     res.json({ success: true, content });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Failed to read content' });
   }
 });
 
-// Update standard photo sections (Hero, About, Tours, Why, Highlight Reels)
+app.put('/api/content', requireAuth, async (req, res) => {
+  try {
+    const current = await db.getContent();
+    const updated = {
+      ...current,
+      ...req.body
+    };
+    await db.saveContent(updated);
+    res.json({ success: true, message: 'Content updated successfully', content: updated });
+  } catch (err) {
+    console.error('Update content error:', err);
+    res.status(500).json({ success: false, message: 'Failed to update content' });
+  }
+});
+
 app.put('/api/content/photos', requireAuth, async (req, res) => {
   try {
-    const current = await readJson(CONTENT_FILE, {});
-    const updates = req.body;
+    const { hero, about, tours, why } = req.body;
+    const current = await db.getContent();
 
-    // Merge sections carefully
-    if (updates.hero) current.hero = { ...current.hero, ...updates.hero };
-    if (updates.about) current.about = { ...current.about, ...updates.about };
-    if (updates.tours) current.tours = { ...current.tours, ...updates.tours };
-    if (updates.why) current.why = { ...current.why, ...updates.why };
-    if (Array.isArray(updates.reelSlides)) current.reelSlides = updates.reelSlides;
+    if (hero) current.hero = { ...(current.hero || {}), ...hero };
+    if (about) current.about = { ...(current.about || {}), ...about };
+    if (tours) current.tours = { ...(current.tours || {}), ...tours };
+    if (why) current.why = { ...(current.why || {}), ...why };
 
-    await writeJson(CONTENT_FILE, current);
+    await db.saveContent(current);
     res.json({ success: true, message: 'Photos updated successfully', content: current });
   } catch (err) {
     console.error('Update photos error:', err);
@@ -275,22 +245,22 @@ app.put('/api/content/photos', requireAuth, async (req, res) => {
 // Instagram photos management
 app.post('/api/content/instagram', requireAuth, async (req, res) => {
   try {
-    const current = await readJson(CONTENT_FILE, {});
+    const current = await db.getContent();
     if (!Array.isArray(current.instagram)) current.instagram = [];
 
     const newPost = {
       id: 'insta-' + Date.now(),
-      src: req.body.src || 'https://images.pexels.com/photos/1927054/pexels-photo-1927054.jpeg?auto=compress&cs=tinysrgb&w=900',
-      alt: req.body.alt || 'Riverdale Kayaking river photo',
+      src: req.body.src || 'https://images.pexels.com/photos/1927054/pexels-photo-1927054.jpeg?auto=compress&cs=tinysrgb&w=900&fm=webp',
+      alt: req.body.alt || 'Riverdale Kayaking Kadalundi photo',
       likes: String(req.body.likes || Math.floor(300 + Math.random() * 400)),
       comments: String(req.body.comments || Math.floor(15 + Math.random() * 30)),
-      location: req.body.location || 'Riverdale River Trail',
-      caption: req.body.caption || 'Another peaceful day gliding on emerald waters! 🛶🌿',
-      tags: req.body.tags || '#RiverdaleKayaking #RiverPaddle #Nature'
+      location: req.body.location || 'Balathiruthi, Kadalundi',
+      caption: req.body.caption || 'Another peaceful day gliding on Kadalundi mangrove waters! 🛶🌿',
+      tags: req.body.tags || '#RiverdaleKayaking #Kadalundi #MangrovePaddle'
     };
 
     current.instagram.unshift(newPost);
-    await writeJson(CONTENT_FILE, current);
+    await db.saveContent(current);
     res.json({ success: true, message: 'Instagram photo added', post: newPost, instagram: current.instagram });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Failed to add Instagram photo' });
@@ -299,7 +269,7 @@ app.post('/api/content/instagram', requireAuth, async (req, res) => {
 
 app.put('/api/content/instagram/:id', requireAuth, async (req, res) => {
   try {
-    const current = await readJson(CONTENT_FILE, {});
+    const current = await db.getContent();
     const id = req.params.id;
     const index = (current.instagram || []).findIndex(p => p.id === id);
     if (index === -1) {
@@ -312,7 +282,7 @@ app.put('/api/content/instagram/:id', requireAuth, async (req, res) => {
       id: id // preserve ID
     };
 
-    await writeJson(CONTENT_FILE, current);
+    await db.saveContent(current);
     res.json({ success: true, message: 'Instagram photo updated', post: current.instagram[index] });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Failed to update Instagram photo' });
@@ -321,28 +291,44 @@ app.put('/api/content/instagram/:id', requireAuth, async (req, res) => {
 
 app.delete('/api/content/instagram/:id', requireAuth, async (req, res) => {
   try {
-    const current = await readJson(CONTENT_FILE, {});
+    const current = await db.getContent();
     const id = req.params.id;
-    const initialLen = current.instagram ? current.instagram.length : 0;
+    const initialLen = (current.instagram || []).length;
     current.instagram = (current.instagram || []).filter(p => p.id !== id);
 
     if (current.instagram.length === initialLen) {
       return res.status(404).json({ success: false, message: 'Instagram photo not found' });
     }
 
-    await writeJson(CONTENT_FILE, current);
+    await db.saveContent(current);
     res.json({ success: true, message: 'Instagram photo deleted', instagram: current.instagram });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Failed to delete Instagram photo' });
   }
 });
 
+// Reel Slides Management
+app.put('/api/content/reel-slides', requireAuth, async (req, res) => {
+  try {
+    const { slides } = req.body;
+    if (!Array.isArray(slides)) {
+      return res.status(400).json({ success: false, message: 'Slides must be an array' });
+    }
+    const current = await db.getContent();
+    current.reelSlides = slides;
+    await db.saveContent(current);
+    res.json({ success: true, message: 'Reel slides updated', reelSlides: current.reelSlides });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Failed to update reel slides' });
+  }
+});
+
 // -------------------------------------------------------------
-// Packages & Pricing API (Manage Kayaking Packages & Rates)
+// Packages & Pricing CRUD API
 // -------------------------------------------------------------
 app.get('/api/packages', async (req, res) => {
   try {
-    const content = await readJson(CONTENT_FILE, {});
+    const content = await db.getContent();
     res.json({ success: true, packages: content.packages || [] });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Failed to fetch packages' });
@@ -356,7 +342,7 @@ app.post('/api/packages', requireAuth, async (req, res) => {
       return res.status(400).json({ success: false, message: 'Package name and price are required' });
     }
 
-    const content = await readJson(CONTENT_FILE, {});
+    const content = await db.getContent();
     if (!Array.isArray(content.packages)) content.packages = [];
 
     const id = 'pkg-' + Date.now();
@@ -371,7 +357,7 @@ app.post('/api/packages', requireAuth, async (req, res) => {
     };
 
     content.packages.push(newPkg);
-    await writeJson(CONTENT_FILE, content);
+    await db.saveContent(content);
 
     res.status(201).json({ success: true, message: 'Package added successfully', package: newPkg });
   } catch (err) {
@@ -384,7 +370,7 @@ app.put('/api/packages/:id', requireAuth, async (req, res) => {
     const id = req.params.id;
     const { name, price, description, slot, duration, badge } = req.body;
 
-    const content = await readJson(CONTENT_FILE, {});
+    const content = await db.getContent();
     if (!Array.isArray(content.packages)) content.packages = [];
 
     const index = content.packages.findIndex(p => p.id === id);
@@ -402,7 +388,7 @@ app.put('/api/packages/:id', requireAuth, async (req, res) => {
       ...(badge !== undefined && { badge: String(badge).trim() })
     };
 
-    await writeJson(CONTENT_FILE, content);
+    await db.saveContent(content);
     res.json({ success: true, message: 'Package updated successfully', package: content.packages[index] });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Failed to update package' });
@@ -412,7 +398,7 @@ app.put('/api/packages/:id', requireAuth, async (req, res) => {
 app.delete('/api/packages/:id', requireAuth, async (req, res) => {
   try {
     const id = req.params.id;
-    const content = await readJson(CONTENT_FILE, {});
+    const content = await db.getContent();
     if (!Array.isArray(content.packages)) content.packages = [];
 
     const initialLen = content.packages.length;
@@ -422,7 +408,7 @@ app.delete('/api/packages/:id', requireAuth, async (req, res) => {
       return res.status(404).json({ success: false, message: 'Package not found' });
     }
 
-    await writeJson(CONTENT_FILE, content);
+    await db.saveContent(content);
     res.json({ success: true, message: 'Package deleted successfully', packages: content.packages });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Failed to delete package' });
@@ -430,13 +416,13 @@ app.delete('/api/packages/:id', requireAuth, async (req, res) => {
 });
 
 // -------------------------------------------------------------
-// Bookings API
+// Bookings API (Public Submission & Admin Management)
 // -------------------------------------------------------------
 const TOUR_PRICE_MAP = {
-  'sunrise-paddling': { name: 'Sunrise River Paddling', price: 1200 },
-  'guided-tours': { name: 'Guided River Tours', price: 1500 },
-  'group-events': { name: 'Group & Event Trips', price: 1350 },
-  'private-expeditions': { name: 'Private Expeditions', price: 1800 }
+  'sunrise-paddling': { name: 'Sunrise Mangrove Kayaking', price: 1200 },
+  'guided-tours': { name: 'Kadalundi Mangrove Eco Tour', price: 1500 },
+  'group-events': { name: 'Balathiruthi Group Expedition', price: 1350 },
+  'private-expeditions': { name: 'Private Sunset Kayaking', price: 1800 }
 };
 
 // Public Booking Submission (From Customer Website)
@@ -455,11 +441,11 @@ app.post('/api/bookings', async (req, res) => {
 
     const tourKey = tourId || 'sunrise-paddling';
 
-    // Fetch dynamic package price from content database
-    const content = await readJson(CONTENT_FILE, {});
+    // Fetch dynamic package price from database
+    const content = await db.getContent();
     const dynamicPkg = (content.packages || []).find(p => p.id === tourKey);
 
-    let tourName = 'Custom River Tour';
+    let tourName = 'Kadalundi Mangrove Tour';
     let unitPrice = 1200;
 
     if (dynamicPkg) {
@@ -485,23 +471,21 @@ app.post('/api/bookings', async (req, res) => {
       tourId: tourKey,
       tourName: tourName,
       date: date,
-      slot: slot || 'Morning 9:00 AM',
+      slot: slot || 'Sunrise 6:00 AM',
       kayakers: count,
       unitPrice: unitPrice,
       totalPrice: totalPrice,
-      status: 'Pending', // Pending, Confirmed, Completed, Cancelled
+      status: 'Pending',
       notes: notes ? notes.trim() : '',
       createdAt: new Date().toISOString()
     };
 
-    const bookings = await readJson(BOOKINGS_FILE, []);
-    bookings.unshift(newBooking);
-    await writeJson(BOOKINGS_FILE, bookings);
+    const savedBooking = await db.createBooking(newBooking);
 
     res.status(201).json({
       success: true,
       message: 'Booking submitted successfully',
-      booking: newBooking
+      booking: savedBooking
     });
   } catch (err) {
     console.error('Create booking error:', err);
@@ -512,7 +496,7 @@ app.post('/api/bookings', async (req, res) => {
 // Admin: Get all bookings with filtering & search
 app.get('/api/bookings', requireAuth, async (req, res) => {
   try {
-    const bookings = await readJson(BOOKINGS_FILE, []);
+    const bookings = await db.getBookings();
     const { status, search, sortBy } = req.query;
 
     let filtered = [...bookings];
@@ -551,13 +535,13 @@ app.get('/api/bookings', requireAuth, async (req, res) => {
 // Admin: Booking Statistics
 app.get('/api/bookings/stats', requireAuth, async (req, res) => {
   try {
-    const bookings = await readJson(BOOKINGS_FILE, []);
+    const bookings = await db.getBookings();
     const total = bookings.length;
     const pending = bookings.filter(b => b.status === 'Pending').length;
     const confirmed = bookings.filter(b => b.status === 'Confirmed').length;
     const completed = bookings.filter(b => b.status === 'Completed').length;
     const cancelled = bookings.filter(b => b.status === 'Cancelled').length;
-    
+
     // Revenue from confirmed and completed bookings
     const activeRevenue = bookings
       .filter(b => b.status === 'Confirmed' || b.status === 'Completed')
@@ -593,17 +577,17 @@ app.patch('/api/bookings/:id/status', requireAuth, async (req, res) => {
       return res.status(400).json({ success: false, message: 'Invalid status' });
     }
 
-    const bookings = await readJson(BOOKINGS_FILE, []);
-    const booking = bookings.find(b => b.id === req.params.id);
-    if (!booking) {
+    const refId = req.params.id;
+    const updated = await db.updateBooking(refId, {
+      status,
+      updatedAt: new Date().toISOString()
+    });
+
+    if (!updated) {
       return res.status(404).json({ success: false, message: 'Booking not found' });
     }
 
-    booking.status = status;
-    booking.updatedAt = new Date().toISOString();
-    await writeJson(BOOKINGS_FILE, bookings);
-
-    res.json({ success: true, message: `Status updated to ${status}`, booking });
+    res.json({ success: true, message: `Status updated to ${status}`, booking: updated });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Failed to update status' });
   }
@@ -613,17 +597,17 @@ app.patch('/api/bookings/:id/status', requireAuth, async (req, res) => {
 app.patch('/api/bookings/:id/notes', requireAuth, async (req, res) => {
   try {
     const { notes } = req.body;
-    const bookings = await readJson(BOOKINGS_FILE, []);
-    const booking = bookings.find(b => b.id === req.params.id);
-    if (!booking) {
+    const refId = req.params.id;
+    const updated = await db.updateBooking(refId, {
+      notes: notes !== undefined ? String(notes).trim() : '',
+      updatedAt: new Date().toISOString()
+    });
+
+    if (!updated) {
       return res.status(404).json({ success: false, message: 'Booking not found' });
     }
 
-    booking.notes = notes !== undefined ? String(notes).trim() : '';
-    booking.updatedAt = new Date().toISOString();
-    await writeJson(BOOKINGS_FILE, bookings);
-
-    res.json({ success: true, message: 'Notes updated', booking });
+    res.json({ success: true, message: 'Notes updated', booking: updated });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Failed to update notes' });
   }
@@ -632,15 +616,13 @@ app.patch('/api/bookings/:id/notes', requireAuth, async (req, res) => {
 // Admin: Delete Booking
 app.delete('/api/bookings/:id', requireAuth, async (req, res) => {
   try {
-    const bookings = await readJson(BOOKINGS_FILE, []);
-    const initialLen = bookings.length;
-    const filtered = bookings.filter(b => b.id !== req.params.id);
+    const refId = req.params.id;
+    const deleted = await db.deleteBooking(refId);
 
-    if (filtered.length === initialLen) {
+    if (!deleted) {
       return res.status(404).json({ success: false, message: 'Booking not found' });
     }
 
-    await writeJson(BOOKINGS_FILE, filtered);
     res.json({ success: true, message: 'Booking deleted successfully' });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Failed to delete booking' });
@@ -650,9 +632,9 @@ app.delete('/api/bookings/:id', requireAuth, async (req, res) => {
 // Admin: Export Bookings to CSV
 app.get('/api/bookings/export/csv', requireAuth, async (req, res) => {
   try {
-    const bookings = await readJson(BOOKINGS_FILE, []);
+    const bookings = await db.getBookings();
     const headers = ['Reference ID', 'Customer Name', 'Contact', 'Experience', 'Date', 'Time Slot', 'Kayakers', 'Total Price (INR)', 'Status', 'Notes', 'Created At'];
-    
+
     const rows = bookings.map(b => [
       `"${b.refId || ''}"`,
       `"${(b.name || '').replace(/"/g, '""')}"`,
@@ -689,9 +671,8 @@ app.get('/admin', async (req, res) => {
     return res.redirect('/admin/login');
   }
   try {
-    const adminData = await getAdminData();
-    const session = adminData.sessionTokens?.find(s => s.token === token);
-    if (!session || new Date(session.expiresAt) < new Date()) {
+    const isValid = await db.validateAdminSession(token);
+    if (!isValid) {
       return res.redirect('/admin/login');
     }
     res.sendFile(path.join(PUBLIC_DIR, 'admin', 'index.html'));
@@ -710,13 +691,20 @@ app.use((req, res) => {
 });
 
 // -------------------------------------------------------------
-// Start Server
+// Start Server with Database Initialization
 // -------------------------------------------------------------
-app.listen(PORT, () => {
-  console.log(`====================================================`);
-  console.log(`🛶 Riverdale Kayaking Node.js Server Running!`);
-  console.log(`🌐 Public Website:  http://localhost:${PORT}`);
-  console.log(`⚙️  Admin Panel:     http://localhost:${PORT}/admin`);
-  console.log(`🔑 Admin Login:     admin / riverdale123`);
-  console.log(`====================================================`);
-});
+async function startServer() {
+  await db.initDB();
+
+  app.listen(PORT, () => {
+    console.log(`====================================================`);
+    console.log(`🛶 Riverdale Kayaking Node.js Server Running!`);
+    console.log(`🌐 Public Website:  http://localhost:${PORT}`);
+    console.log(`⚙️  Admin Panel:     http://localhost:${PORT}/admin`);
+    console.log(`🔑 Admin Login:     admin / riverdale123`);
+    console.log(`💾 Database:        ${db.isMongoConnected() ? 'MongoDB Cloud Atlas' : 'Local JSON Store (data/)'}`);
+    console.log(`====================================================`);
+  });
+}
+
+startServer();

@@ -2,8 +2,8 @@
 
 > **Project:** Riverdale Kayaking Web Application & Custom Admin Portal
 > **Stack:** Node.js, Express 5, Multer, Vanilla JS, Tailwind CSS, JSON Persistent Storage
-> **Generated Date:** 11/25/2026, 4:11:15 PM GMT+5:30
-> **Total Dialogue Turns:** 31
+> **Generated Date:** 11/25/2026, 4:17:29 PM GMT+5:30
+> **Total Dialogue Turns:** 32
 
 ---
 
@@ -40,6 +40,7 @@
 - [**Turn 29:** while geting to the http://localhost:3000/admin/login throught the short keys...](#turn-29)
 - [**Turn 30:** in mobile screen the our partners page"s  icon in the page horizontally](#turn-30)
 - [**Turn 31:** i want this like border btw the  hero page and Mangrove Backwaters page](#turn-31)
+- [**Turn 32:** also change https://riverdale-kayaking.onrender.com/admin to https://riverdal...](#turn-32)
 
 ---
 
@@ -1353,6 +1354,36 @@ The update has been committed and pushed to your GitHub repository: [`https://gi
 ### 👤 User Request
 
 > i want this like border btw the  hero page and Mangrove Backwaters page
+
+### 🤖 Assistant Response & Actions Taken
+
+I have implemented the **hand-torn / ripped paper edge border** between the **Hero** section and the **Mangrove Backwaters** section to match your reference image:
+
+---
+
+### What was updated:
+
+1. **Realistic Torn Paper Contour & Deckle Edge:**
+   - Replaced the wave with an organic, realistic **torn paper edge** featuring natural paper fiber rips, peaks, jagged micro-serrations, and deckle tears that match the reference image you shared.
+2. **2-Ply Layered Paper Depth:**
+   - **Layer 1 (Under-ply):** A semi-translucent fibrous paper edge (`fill-opacity="0.40"`) peeking slightly along the tear.
+   - **Layer 2 (Main Sheet):** Solid crisp white paper with an authentic soft paper drop-shadow (`feDropShadow`) casting down onto the river photograph above it, giving the tactile look of hand-ripped heavy watercolor cardstock.
+3. **Seamless Transition:**
+   - The torn paper edge perfectly connects the dark hero water photo into the crisp white background of the **Mangrove Backwaters** (`#experience`) section without any gaps or layout shifts.
+4. **Fluid & Responsive:**
+   - Scales across mobile, tablet, and desktop viewports (`h-16 sm:h-24 md:h-32 block`) while preserving crisp vector rendering on high-DPI/Retina screens.
+
+All changes are committed and pushed to your GitHub repository: [`https://github.com/avishanth77/riverdale-kayaking.git`](https://github.com/avishanth77/riverdale-kayaking.git). Render will automatically deploy the updated border!
+
+---
+
+## Turn 32
+
+🕒 **Timestamp:** `2026-11-25T10:42:07Z`
+
+### 👤 User Request
+
+> also change https://riverdale-kayaking.onrender.com/admin to https://riverdale-kayaking.onrender.com/god
 
 ### 🤖 Assistant Response & Actions Taken
 

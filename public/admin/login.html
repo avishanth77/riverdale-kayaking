@@ -76,8 +76,8 @@
               id="username"
               required
               autocomplete="username"
-              placeholder="e.g. admin"
-              value="admin"
+              placeholder="Enter admin username"
+              value=""
               class="w-full rounded-xl bg-river-950/80 border border-white/15 px-4 py-3 text-sm text-white placeholder-white/30 focus:border-gold-500 focus:ring-2 focus:ring-gold-500/20 focus:outline-none transition-all"
             />
           </div>
@@ -92,16 +92,10 @@
               required
               autocomplete="current-password"
               placeholder="Enter admin password"
-              value="riverdale123"
+              value=""
               class="w-full rounded-xl bg-river-950/80 border border-white/15 px-4 py-3 text-sm text-white placeholder-white/30 focus:border-gold-500 focus:ring-2 focus:ring-gold-500/20 focus:outline-none transition-all"
             />
           </div>
-        </div>
-
-        <!-- Quick Demo Credentials Box -->
-        <div class="p-3 rounded-xl bg-river-850 border border-white/5 text-xs text-white/70 flex items-center justify-between">
-          <span>Default: <strong class="text-gold-400">admin</strong> / <strong class="text-gold-400">riverdale123</strong></span>
-          <button type="button" id="fill-creds" class="text-[11px] font-semibold text-gold-400 hover:text-white underline">Auto-fill</button>
         </div>
 
         <button
@@ -129,13 +123,6 @@
       const form = document.getElementById('login-form');
       const alertBox = document.getElementById('login-alert');
       const submitBtn = document.getElementById('submit-btn');
-      const fillCredsBtn = document.getElementById('fill-creds');
-
-      // Auto-fill button
-      fillCredsBtn.addEventListener('click', () => {
-        document.getElementById('username').value = 'admin';
-        document.getElementById('password').value = 'riverdale123';
-      });
 
       // Check if already logged in
       fetch('/api/admin/me')

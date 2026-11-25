@@ -1,7 +1,7 @@
 {
-  "username": "admin",
-  "passwordHash": "203a8b68c86e9d88eaf3fb668c80242e986eeb73d0a07085b5080de79829f6d4",
-  "salt": "riverdale_salt_2026",
+  "username": "riverdale",
+  "passwordHash": "efdfa30e38f95454a5b8244e89cf1e1d7b5bfd186c0cbb2470d63602babfc5f4",
+  "salt": "82a662a1f4b42e76bd24ba302d00e870",
   "sessionTokens": [
     {
       "token": "3ff04edbb7a6e4f8553d07a8b63890d2c6aca1bdddc7194fa95d201163c80dd8",

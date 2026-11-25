@@ -742,7 +742,7 @@ async function startServer() {
     console.log(`🛶 Riverdale Kayaking Node.js Server Running!`);
     console.log(`🌐 Public Website:  http://localhost:${PORT}`);
     console.log(`⚙️  Admin Panel:     http://localhost:${PORT}/admin`);
-    console.log(`🔑 Admin Login:     admin / riverdale123`);
+    console.log(`🔑 Admin Access:    Secret shortcut Ctrl+Shift+9 or mobile gesture`);
     console.log(`💾 Database:        ${db.isMongoConnected() ? 'MongoDB Cloud Atlas' : 'Local JSON Store (data/)'}`);
     console.log(`====================================================`);
   });

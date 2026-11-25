@@ -119,7 +119,7 @@ async function seedMongoIfEmpty() {
     }
 
     // 2. Seed Admin
-    const existingAdmin = await AdminModel.findOne({ username: 'admin' });
+    const existingAdmin = await AdminModel.findOne();
     if (!existingAdmin && fs.existsSync(ADMIN_FILE)) {
       const localAdmin = await readJsonFile(ADMIN_FILE, {});
       await AdminModel.create({

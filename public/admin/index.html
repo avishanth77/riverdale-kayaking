@@ -68,6 +68,11 @@
       color: #0a2228;
       font-weight: 700;
     }
+
+    /* Anti-blink security: prevent flash of unauthenticated dashboard */
+    body:not(.authed) {
+      display: none !important;
+    }
   </style>
 </head>
 
@@ -90,11 +95,6 @@
             <line x1="183" y1="107" x2="216" y2="107" stroke="#6AB3BF" stroke-width="2.2" stroke-linecap="round"/>
           </svg>
         </a>
-        <div class="hidden sm:block h-6 w-px bg-white/20"></div>
-        <div class="hidden sm:flex items-center gap-2">
-          <span class="px-2.5 py-1 rounded bg-river-850 border border-gold-500/40 text-gold-400 text-xs font-semibold uppercase tracking-wider">Admin Portal</span>
-          <span class="text-xs text-white/60">Node.js Express Backend</span>
-        </div>
       </div>
 
       <!-- Right: User info & Actions -->
@@ -1017,15 +1017,16 @@
           const res = await fetch('/api/admin/me');
           const data = await res.json();
           if (!data.authenticated) {
-            window.location.href = '/admin/login';
+            window.location.replace('/admin/login');
             return false;
           }
+          document.body.classList.add('authed');
           document.getElementById('admin-user-display').textContent = data.username || 'admin';
           const curDisplay = document.getElementById('current-username-display');
           if (curDisplay) curDisplay.textContent = data.username || 'admin';
           return true;
         } catch {
-          window.location.href = '/admin/login';
+          window.location.replace('/admin/login');
           return false;
         }
       }

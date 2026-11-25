@@ -700,31 +700,33 @@ app.get('/api/bookings/export/csv', requireAuth, async (req, res) => {
 });
 
 // -------------------------------------------------------------
-// Static UI Routes
+// Protected Admin Dashboard Route (Server-side redirect: ZERO flash/blink)
 // -------------------------------------------------------------
-// Serve public website files
-app.use(express.static(PUBLIC_DIR));
-
-// Admin routes (Server-side redirect: only logged-in admin can access dashboard)
-app.get('/admin', async (req, res) => {
+app.get(['/admin', '/admin/', '/admin/index.html'], async (req, res) => {
   const token = req.cookies.admin_token;
   if (!token) {
-    return res.redirect('/admin/login');
+    return res.redirect(302, '/admin/login');
   }
   try {
     const isValid = await db.validateAdminSession(token);
     if (!isValid) {
-      return res.redirect('/admin/login');
+      return res.redirect(302, '/admin/login');
     }
     res.sendFile(path.join(PUBLIC_DIR, 'admin', 'index.html'));
   } catch (err) {
-    res.redirect('/admin/login');
+    res.redirect(302, '/admin/login');
   }
 });
 
-app.get('/admin/login', (req, res) => {
+app.get(['/admin/login', '/admin/login/'], (req, res) => {
   res.sendFile(path.join(PUBLIC_DIR, 'admin', 'login.html'));
 });
+
+// -------------------------------------------------------------
+// Static UI Routes
+// -------------------------------------------------------------
+// Serve public website files (excluding protected admin dashboard above)
+app.use(express.static(PUBLIC_DIR));
 
 // Fallback for public website
 app.use((req, res) => {

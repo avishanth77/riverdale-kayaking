@@ -25,13 +25,13 @@ Because mobile devices lack keyboard shortcuts, three stealth touch gestures are
 
 ## 3. Authentication & Session Architecture
 
-- **Default Credentials:**
-  - **Username:** `admin`
-  - **Default Password:** `riverdale2026`
+- **Configured Credentials:**
+  - **Username:** `riverdale`
+  - **Password:** Configured via `node scripts/set-admin.js` or the Admin Settings tab
 - **Password Storage:** Salted SHA-256 hash (`crypto.createHash('sha256').update(`${password}:${salt}`).digest('hex')`).
 - **Session Duration:** 7 days (`7 * 24 * 60 * 60 * 1000 ms`).
 - **Token Delivery:** Secure `HttpOnly` cookie named `admin_token`, plus optional HTTP `Authorization: Bearer <token>` support for API clients.
-- **Password Change:** Admin can change the master password anytime from the Admin Portal Settings tab; new salts are generated automatically.
+- **Credential Updates:** Admin can change the username and password anytime from the Admin Portal Settings tab or via `node scripts/set-admin.js`; changes sync immediately to MongoDB Cloud and local storage.
 
 ---
 
